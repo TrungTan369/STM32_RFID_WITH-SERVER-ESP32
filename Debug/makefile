@@ -61,8 +61,8 @@ all: main-build
 main-build: TKLL.elf secondary-outputs
 
 # Tool invocations
-TKLL.elf: $(OBJS) $(USER_OBJS) D:\STM32F031_NUCLEO\TKLL\STM32F031K6TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "TKLL.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"D:\STM32F031_NUCLEO\TKLL\STM32F031K6TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TKLL.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+TKLL.elf: $(OBJS) $(USER_OBJS) E:\vxl\ 241\STM32_RFID_WITH-SERVER-ESP32\STM32F031K6TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "TKLL.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"E:\vxl 241\STM32_RFID_WITH-SERVER-ESP32\STM32F031K6TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TKLL.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
