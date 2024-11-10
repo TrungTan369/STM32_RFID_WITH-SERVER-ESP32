@@ -52,6 +52,10 @@ void HardFault_Handler(void);
 void SVC_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
+<<<<<<< HEAD
+=======
+void DMA1_Channel2_3_IRQHandler(void);
+>>>>>>> develop
 void TIM3_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 

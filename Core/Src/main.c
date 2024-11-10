@@ -22,7 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "RGB.h"
+#include "timer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,7 +41,9 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef htim3;
+//TIM_HandleTypeDef htim3;
+//DMA_HandleTypeDef hdma_tim3_ch4_up;
+
 
 /* USER CODE BEGIN PV */
 
@@ -50,6 +53,9 @@ TIM_HandleTypeDef htim3;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM3_Init(void);
+
+static void MX_DMA_Init(void);
+
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -88,7 +94,17 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM3_Init();
+
   /* USER CODE BEGIN 2 */
+
+  MX_DMA_Init();
+  /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT (&htim3);
+
+//  TIM3->CCR1 = 50;
+//  TIM3->CCR2 = 30;
+//  TIM3->CCR4 = 20;
+
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
@@ -96,11 +112,168 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  setTimer(0, 500);
+  int blue = 0;
+  int green = 0;
+  int red = 0;
+  int status=1;
+  int increasing = 1;
+  int decreasing = 0;
   while (1)
   {
-	  HAL_GPIO_TogglePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin);
-	  HAL_Delay(500);
-	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,255);
+
+	  switch(status){
+	  case RED:
+		  if(increasing){
+			  red++;
+		  }
+		  if(red>=100){
+			  increasing--;
+			  decreasing++;
+		  }
+		  if(decreasing){
+			  red--;
+		  }
+		  if(red<0) {
+			  status++;
+			  red=0;
+			  increasing++;
+			  decreasing--;
+		  }
+
+
+
+		  break;
+	  case GREEN:
+		  if(increasing){
+		  	  green++;
+		 	  }
+		  if(green>=100){
+			  increasing--;
+			  decreasing++;
+		  }
+		  if(decreasing){
+			  green--;
+		  }
+		  if(green<0) {
+			  status++;
+			  green=0;
+			  increasing++;
+			  decreasing--;
+		  }
+		  		  break;
+	  case BLUE:
+		  if(increasing){
+		  	  blue++;
+		 	  }
+		  if(blue>=100){
+			  increasing--;
+			  decreasing++;
+		  }
+		  if(decreasing){
+			  blue--;
+		  }
+		  if(blue<0) {
+			  status++;
+			  blue=0;
+			  increasing++;
+			  decreasing--;
+		  }
+		  break;
+	  case YELLOW:
+
+		  if(increasing){
+			  green++;
+			  red=green*1.25;
+
+		 	  }
+		  if(red>=100){
+			  increasing--;
+			  decreasing++;
+		  }
+		  if(decreasing){
+			  green--;
+			  red=green*1.25;
+
+		  }
+		  if(green<0) {
+			  status++;
+			  green=0;
+			  red=0;
+			  increasing++;
+			  decreasing--;
+		  }
+		  break;
+	  case PURPLE:
+
+		  if(increasing){
+			  red++;
+			  blue=red*1.25;
+
+		 	  }
+		  if(blue>=100){
+			  increasing--;
+			  decreasing++;
+		  }
+		  if(decreasing){
+			  red--;
+			  blue=red*1.25;
+
+		  }
+		  if(blue<0) {
+			  status++;
+			  blue=0;
+			  red=0;
+			  increasing++;
+			  decreasing--;
+		  }
+		  break;
+	  case WHITE:
+
+		  if(increasing){
+			  red++;
+			  blue=red*2;
+		  	  green=red*2;
+		 	  }
+		  if(blue>=100){
+			  increasing--;
+			  decreasing++;
+		  }
+		  if(decreasing){
+			  red--;
+			  blue=red*2;
+			  green=red*2;
+
+		  }
+		  if(blue<0) {
+			  status==1;
+			  blue=0;
+			  red=0;
+			  green=0
+			  increasing++;
+			  decreasing--;
+		  }
+		  break;
+	  default:
+		  break;
+		  rgb(red,blue,green);
+		  HAL_Delay(50);
+	  }
+//	  for ( blue = 0; blue <= 100; blue+=10){
+//		  for ( green = 0; green <= 100; green+=5){
+//			  for ( red = 0; red <= 70; red++){
+//				  rgb(red, green, blue);
+//				  HAL_Delay(10);
+//			  }
+//		  }
+//	  }
+
+//	  if(timer_flag[0] == 1	){
+		  HAL_GPIO_TogglePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin);
+//		  setTimer(0, 500);
+//	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -162,9 +335,15 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
+
   htim3.Init.Prescaler = 7999;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 9;
+
+  htim3.Init.Prescaler = 799;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 99;
+
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
@@ -210,6 +389,25 @@ static void MX_TIM3_Init(void)
 }
 
 /**
+<<<<<<< HEAD
+=======
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel2_3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
+
+}
+
+/**
+>>>>>>> develop
   * @brief GPIO Initialization Function
   * @param None
   * @retval None

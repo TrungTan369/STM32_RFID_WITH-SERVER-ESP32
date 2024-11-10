@@ -1,12 +1,33 @@
 #MicroXplorer Configuration settings - do not modify
+Dma.Request0=TIM3_CH4/UP
+Dma.RequestsNb=1
+Dma.TIM3_CH4/UP.0.Direction=DMA_MEMORY_TO_PERIPH
+Dma.TIM3_CH4/UP.0.Instance=DMA1_Channel3
+Dma.TIM3_CH4/UP.0.MemDataAlignment=DMA_MDATAALIGN_HALFWORD
+Dma.TIM3_CH4/UP.0.MemInc=DMA_MINC_ENABLE
+Dma.TIM3_CH4/UP.0.Mode=DMA_NORMAL
+Dma.TIM3_CH4/UP.0.PeriphDataAlignment=DMA_PDATAALIGN_HALFWORD
+Dma.TIM3_CH4/UP.0.PeriphInc=DMA_PINC_DISABLE
+Dma.TIM3_CH4/UP.0.Priority=DMA_PRIORITY_LOW
+Dma.TIM3_CH4/UP.0.RequestParameters=Instance,Direction,PeriphInc,MemInc,PeriphDataAlignment,MemDataAlignment,Mode,Priority
 File.Version=6
+GPIO.groupedBy=Group By Peripherals
 KeepUserPlacement=false
 Mcu.Family=STM32F0
+<<<<<<< HEAD
 Mcu.IP0=NVIC
 Mcu.IP1=RCC
 Mcu.IP2=SYS
 Mcu.IP3=TIM3
 Mcu.IPNb=4
+=======
+Mcu.IP0=DMA
+Mcu.IP1=NVIC
+Mcu.IP2=RCC
+Mcu.IP3=SYS
+Mcu.IP4=TIM3
+Mcu.IPNb=5
+>>>>>>> develop
 Mcu.Name=STM32F031K6Tx
 Mcu.Package=LQFP32
 Mcu.Pin0=PB1
@@ -23,6 +44,7 @@ Mcu.UserConstants=
 Mcu.UserName=STM32F031K6Tx
 MxCube.Version=6.3.0
 MxDb.Version=DB.6.0.30
+NVIC.DMA1_Channel2_3_IRQn=true\:0\:0\:false\:false\:true\:false\:true
 NVIC.ForceEnableDMAVector=true
 NVIC.HardFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false
 NVIC.NonMaskableInt_IRQn=true\:0\:0\:false\:false\:true\:false\:false
@@ -40,16 +62,33 @@ PA14.GPIO_Label=SWCLK
 PA14.Locked=true
 PA14.Mode=Serial_Wire
 PA14.Signal=SYS_SWCLK
+<<<<<<< HEAD
+=======
+PB1.GPIOParameters=GPIO_Label
+PB1.GPIO_Label=LED_R
+>>>>>>> develop
 PB1.Signal=S_TIM3_CH4
 PB3.GPIOParameters=GPIO_Label
 PB3.GPIO_Label=LED_DEBUG
 PB3.Locked=true
 PB3.Signal=GPIO_Output
+<<<<<<< HEAD
 PB4.Locked=true
 PB4.Signal=S_TIM3_CH1
 PB5.Locked=true
 PB5.Signal=S_TIM3_CH2
 PinOutPanel.RotationAngle=0
+=======
+PB4.GPIOParameters=GPIO_Label
+PB4.GPIO_Label=LED_B
+PB4.Locked=true
+PB4.Signal=S_TIM3_CH1
+PB5.GPIOParameters=GPIO_Label
+PB5.GPIO_Label=LED_G
+PB5.Locked=true
+PB5.Signal=S_TIM3_CH2
+PinOutPanel.RotationAngle=-90
+>>>>>>> develop
 ProjectManager.AskForMigrate=true
 ProjectManager.BackupPrevious=false
 ProjectManager.CompilerOptimize=6
@@ -77,7 +116,11 @@ ProjectManager.StackSize=0x400
 ProjectManager.TargetToolchain=STM32CubeIDE
 ProjectManager.ToolChainLocation=
 ProjectManager.UnderRoot=true
+<<<<<<< HEAD
 ProjectManager.functionlistsort=1-MX_GPIO_Init-GPIO-false-HAL-true,2-SystemClock_Config-RCC-false-HAL-false,3-MX_TIM2_Init-TIM2-false-HAL-true
+=======
+ProjectManager.functionlistsort=1-MX_GPIO_Init-GPIO-false-HAL-true,2-SystemClock_Config-RCC-false-HAL-false,3-MX_TIM3_Init-TIM3-false-HAL-true,4-MX_DMA_Init-DMA-false-HAL-true
+>>>>>>> develop
 RCC.CECFreq_Value=32786.88524590164
 RCC.FamilyName=M
 RCC.HSICECFreq_Value=32786.88524590164
@@ -95,9 +138,15 @@ SH.S_TIM3_CH4.ConfNb=1
 TIM3.Channel-PWM\ Generation1\ CH1=TIM_CHANNEL_1
 TIM3.Channel-PWM\ Generation2\ CH2=TIM_CHANNEL_2
 TIM3.Channel-PWM\ Generation4\ CH4=TIM_CHANNEL_4
+<<<<<<< HEAD
 TIM3.IPParameters=Channel-PWM Generation1 CH1,Channel-PWM Generation2 CH2,Channel-PWM Generation4 CH4,Prescaler,Period
 TIM3.Period=9
 TIM3.Prescaler=7999
+=======
+TIM3.IPParameters=Prescaler,Period,Channel-PWM Generation1 CH1,Channel-PWM Generation2 CH2,Channel-PWM Generation4 CH4
+TIM3.Period=99
+TIM3.Prescaler=799
+>>>>>>> develop
 VP_SYS_VS_Systick.Mode=SysTick
 VP_SYS_VS_Systick.Signal=SYS_VS_Systick
 VP_TIM3_VS_ClockSourceINT.Mode=Internal
