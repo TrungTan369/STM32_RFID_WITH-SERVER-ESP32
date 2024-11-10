@@ -60,6 +60,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define RC522_CS_Pin GPIO_PIN_4
+#define RC522_CS_GPIO_Port GPIOA
 #define LED_R_Pin GPIO_PIN_1
 #define LED_R_GPIO_Port GPIOB
 #define SWDIO_Pin GPIO_PIN_13

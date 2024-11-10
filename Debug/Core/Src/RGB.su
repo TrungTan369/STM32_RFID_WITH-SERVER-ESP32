@@ -1,1 +1,2 @@
-RGB.c:11:6:rgb	24	static
+RGB.c:18:6:rgb	24	static
+RGB.c:23:6:all_led	8	static
