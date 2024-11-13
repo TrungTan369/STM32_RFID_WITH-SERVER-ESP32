@@ -5,8 +5,9 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Core/Src/RFID.c \
+../Core/Src/RFID_SPI.c \
 ../Core/Src/RGB.c \
+../Core/Src/esp_uart.c \
 ../Core/Src/i2c-lcd.c \
 ../Core/Src/main.c \
 ../Core/Src/stm32f0xx_hal_msp.c \
@@ -14,12 +15,12 @@ C_SRCS += \
 ../Core/Src/syscalls.c \
 ../Core/Src/sysmem.c \
 ../Core/Src/system_stm32f0xx.c \
-../Core/Src/timer.c \
-../Core/Src/uart.c 
+../Core/Src/timer.c 
 
 OBJS += \
-./Core/Src/RFID.o \
+./Core/Src/RFID_SPI.o \
 ./Core/Src/RGB.o \
+./Core/Src/esp_uart.o \
 ./Core/Src/i2c-lcd.o \
 ./Core/Src/main.o \
 ./Core/Src/stm32f0xx_hal_msp.o \
@@ -27,12 +28,12 @@ OBJS += \
 ./Core/Src/syscalls.o \
 ./Core/Src/sysmem.o \
 ./Core/Src/system_stm32f0xx.o \
-./Core/Src/timer.o \
-./Core/Src/uart.o 
+./Core/Src/timer.o 
 
 C_DEPS += \
-./Core/Src/RFID.d \
+./Core/Src/RFID_SPI.d \
 ./Core/Src/RGB.d \
+./Core/Src/esp_uart.d \
 ./Core/Src/i2c-lcd.d \
 ./Core/Src/main.d \
 ./Core/Src/stm32f0xx_hal_msp.d \
@@ -40,8 +41,7 @@ C_DEPS += \
 ./Core/Src/syscalls.d \
 ./Core/Src/sysmem.d \
 ./Core/Src/system_stm32f0xx.d \
-./Core/Src/timer.d \
-./Core/Src/uart.d 
+./Core/Src/timer.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

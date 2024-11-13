@@ -11,6 +11,8 @@
 
 #include "stm32f0xx_hal.h"
 
+extern I2C_HandleTypeDef hi2c1;  // change your handler here accordingly
+
 void lcd_init (void);   // initialize lcd
 
 void lcd_send_cmd (char cmd);  // send command to the lcd
@@ -23,4 +25,5 @@ void lcd_clear_display (void);	//clear display lcd
 
 void lcd_goto_XY (int row, int col); //set proper location on screen
 
+void lcd_send_int(int);
 #endif /* INC_I2C_LCD_H_ */

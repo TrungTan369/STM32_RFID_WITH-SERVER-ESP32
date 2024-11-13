@@ -5,9 +5,10 @@
  *      Author: HOME
  */
 #include "i2c-lcd.h"
-extern I2C_HandleTypeDef hi2c1;  // change your handler here accordingly
 
 #define SLAVE_ADDRESS_LCD (0x27 << 1) // change this according to ur setup
+
+I2C_HandleTypeDef hi2c1;
 
 void lcd_send_cmd (char cmd)
 {
@@ -73,4 +74,8 @@ void lcd_goto_XY (int row, int col)
 		pos_Addr = 0x80 | (0x40 + col);
 	lcd_send_cmd(pos_Addr);
 }
-
+void lcd_send_int(int number) {
+    char str[16];
+    sprintf(str, "%d", number);
+    lcd_send_string(str);
+}

@@ -24,9 +24,10 @@
 /* USER CODE BEGIN Includes */
 #include "RGB.h"
 #include "timer.h"
-#include "uart.h"
-#include "RFID.h"
 #include "i2c-lcd.h"
+#include "esp_uart.h"
+#include <stdio.h>
+#include "RFID_SPI.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -82,7 +83,14 @@ static void MX_I2C1_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	  uint8_t status;
+	  uint8_t str[MAX_LEN]; // Max_LEN = 16
+	  uint8_t sNum[5];
 
+	  int data[4][5] =   {{183, 322, 141, 25, 100} ,
+						 {273, 323, 140, 25, 120},
+						 {227, 322, 182, 15, 236},
+						 {213, 321, 142, 18, 178}};
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -118,27 +126,56 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  //setTimer(0, 500);
+  setTimer(2, 500);
   lcd_init();
   MFRC522_Init();
-  uint8_t recvData[18];
+  HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
    while (1)
    {
-//	   uint8_t data[] = {0x48, 0x65, 0x6C, 0x6C, 0x6F};  // Ví dụ: "Hello" trong hex
-//	   HAL_UART_Transmit(&huart1, data, sizeof(data), HAL_MAX_DELAY);
-	   MFRC522_Read(4, recvData);
-	   lcd_goto_XY(1, 0);
-	   lcd_send_data(recvData[0]);
-	   lcd_goto_XY(1, 4);
-	   lcd_send_data(recvData[1]);
-	   lcd_goto_XY(1, 8);
-	   lcd_send_data(recvData[2]);
-//	   lcd_goto_XY(1, 4);
-//	   lcd_send_data(recvData[1]);
-	  // lcd_send_string("TEST TEST TEST");
-	   lcd_goto_XY(0, 0);
-	   lcd_send_string("FAIL FAIL FAIL");
-	    HAL_Delay(1000);          // �?ợi 1 giây
+		status = MFRC522_Request(PICC_REQIDL, str);
+		if(status == MI_OK){
+			setTimer(2, 500);
+		}
+		if(timer_flag[2] != 1){
+			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 1);
+		}
+		else{
+			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
+		}
+		status = MFRC522_Anticoll(str);
+		memcpy(sNum, str, 5);
+		HAL_Delay(100);
+
+		lcd_goto_XY(1, 0);
+		lcd_send_int(sNum[0]);
+		lcd_goto_XY(1, 4);
+		lcd_send_int(sNum[1]);
+		lcd_goto_XY(1, 8);
+		lcd_send_int(sNum[2]);
+		lcd_goto_XY(1, 12);
+		lcd_send_string("TEST");
+
+		lcd_goto_XY(0, 0);
+		lcd_send_int(sNum[3]);
+		lcd_goto_XY(0, 4);
+		lcd_send_int(sNum[4]);
+		lcd_goto_XY(0, 8);
+		lcd_send_int(sNum[5]);
+		lcd_goto_XY(0, 12);
+		lcd_send_string("FAIL");
+
+		if(sNum[0] == 183 && sNum[1] == 92 && sNum[2] == 141 && sNum[3] == 02){
+			HAL_GPIO_WritePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin, 1);
+		}
+		if(sNum[0] == 27 && sNum[1] == 153 && sNum[2] == 140 && sNum[3] == 02){
+			HAL_GPIO_WritePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin, 0);
+		}
+//		if(data[0][0] == sNum[0] ){
+//			HAL_GPIO_WritePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin, SET);
+//		}
+//		else if(data[1][0] == sNum[0]){
+//			HAL_GPIO_WritePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin, RESET);
+//		}
 //	  if(timer_flag[0] == 1	){
 //		  HAL_GPIO_TogglePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin);
 //		  setTimer(0, 500);
@@ -406,21 +443,32 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(RC522_CS_GPIO_Port, RC522_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, RC522_RESET_Pin|RC522_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : RC522_CS_Pin */
-  GPIO_InitStruct.Pin = RC522_CS_Pin;
+  /*Configure GPIO pin : BUZZ_Pin */
+  GPIO_InitStruct.Pin = BUZZ_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(RC522_CS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(BUZZ_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : RC522_RESET_Pin RC522_CS_Pin */
+  GPIO_InitStruct.Pin = RC522_RESET_Pin|RC522_CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LED_DEBUG_Pin */
   GPIO_InitStruct.Pin = LED_DEBUG_Pin;

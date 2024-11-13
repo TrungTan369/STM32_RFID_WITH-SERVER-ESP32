@@ -1,5 +1,5 @@
-Core/Src/uart.o: ../Core/Src/uart.c ../Core/Inc/uart.h ../Core/Inc/main.h \
- ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h \
+Core/Src/esp_uart.o: ../Core/Src/esp_uart.c ../Core/Inc/esp_uart.h \
+ ../Core/Inc/main.h ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h \
  ../Core/Inc/stm32f0xx_hal_conf.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h \
@@ -31,7 +31,7 @@ Core/Src/uart.o: ../Core/Src/uart.c ../Core/Inc/uart.h ../Core/Inc/main.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h
 
-../Core/Inc/uart.h:
+../Core/Inc/esp_uart.h:
 
 ../Core/Inc/main.h:
 
