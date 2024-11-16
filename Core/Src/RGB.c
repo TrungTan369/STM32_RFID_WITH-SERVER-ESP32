@@ -21,7 +21,7 @@ void rgb(int red, int green, int blue){
 	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 120 - red);
 }
 void all_led(){
-	switch(status){
+	switch(status_led){
 	  case RED:
 		  if(increasing){
 			  red++;

@@ -9,7 +9,7 @@
 #include "timer.h"
 
 int counter[3] = {0, 0, 0};
-int timer_flag[3] = {0, 0, 0};// FLAG[3] = 1 TO CHECK BUTTON PRESS( GO TO FUNCTION getKeyinput())
+int timer_flag[3] = {0, 0, 1};// FLAG[2] = 1 TO CHECK BUTTON PRESS( GO TO FUNCTION getKeyinput())
 
 void setTimer(int timer, int duration){
 	counter[timer] = duration / 10;
@@ -25,6 +25,6 @@ void timer_run(){
 	}
 }
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){ // 10ms each time run
-	//getKeyinput();
+	getKeyinput();
 	timer_run();
 }

@@ -21,7 +21,7 @@ DMA_HandleTypeDef hdma_tim3_ch4_up;
 extern int blue;
 extern int green;
 extern int red;
-extern int status;
+extern int status_led;
 extern int increasing;
 extern int decreasing;
 

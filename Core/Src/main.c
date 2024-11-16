@@ -22,12 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "RGB.h"
-#include "timer.h"
-#include "i2c-lcd.h"
-#include "esp_uart.h"
-#include <stdio.h>
-#include "RFID_SPI.h"
+#include "global.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -73,7 +69,9 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+//uint8_t status;
+//uint8_t str[MAX_LEN]; // Max_LEN = 16
+//uint8_t readCard[5];
 /* USER CODE END 0 */
 
 /**
@@ -83,14 +81,7 @@ static void MX_I2C1_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	  uint8_t status;
-	  uint8_t str[MAX_LEN]; // Max_LEN = 16
-	  uint8_t sNum[5];
 
-	  int data[4][5] =   {{183, 322, 141, 25, 100} ,
-						 {273, 323, 140, 25, 120},
-						 {227, 322, 182, 15, 236},
-						 {213, 321, 142, 18, 178}};
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -126,60 +117,62 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  setTimer(2, 500);
+  setTimer(1, 80);
   lcd_init();
   MFRC522_Init();
   HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
    while (1)
    {
-		status = MFRC522_Request(PICC_REQIDL, str);
-		if(status == MI_OK){
-			setTimer(2, 500);
-		}
-		if(timer_flag[2] != 1){
+//		status = MFRC522_Request(PICC_REQIDL, str);
+//		status = MFRC522_Anticoll(str);
+//		memcpy(readCard, str, 5);
+//		HAL_Delay(100);
+
+//		if(status == MI_OK){
+//			setTimer(1, 80);
+//		}
+
+
+//		if(timer_flag[0] == 1){
+//			lcd_send_string("HELLO MASTER");
+//			setTimer(0, 7000);
+//		}
+
+		if(timer_flag[1] != 1){
 			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 1);
 		}
 		else{
 			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
 		}
-		status = MFRC522_Anticoll(str);
-		memcpy(sNum, str, 5);
-		HAL_Delay(100);
 
 		lcd_goto_XY(1, 0);
-		lcd_send_int(sNum[0]);
+		lcd_send_int(readCard[0]);
 		lcd_goto_XY(1, 4);
-		lcd_send_int(sNum[1]);
+		lcd_send_int(readCard[1]);
 		lcd_goto_XY(1, 8);
-		lcd_send_int(sNum[2]);
+		lcd_send_int(readCard[2]);
 		lcd_goto_XY(1, 12);
 		lcd_send_string("TEST");
 
 		lcd_goto_XY(0, 0);
-		lcd_send_int(sNum[3]);
+		lcd_send_int(readCard[3]);
 		lcd_goto_XY(0, 4);
-		lcd_send_int(sNum[4]);
+		lcd_send_int(readCard[4]);
 		lcd_goto_XY(0, 8);
-		lcd_send_int(sNum[5]);
+		lcd_send_int(readCard[5]);
 		lcd_goto_XY(0, 12);
 		lcd_send_string("FAIL");
 
-		if(sNum[0] == 183 && sNum[1] == 92 && sNum[2] == 141 && sNum[3] == 02){
-			HAL_GPIO_WritePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin, 1);
+
+		if(str[0] == 27 && str[1] == 153 && str[2] == 140 && str[3] == 02){
+			HAL_GPIO_TogglePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin);
 		}
-		if(sNum[0] == 27 && sNum[1] == 153 && sNum[2] == 140 && sNum[3] == 02){
-			HAL_GPIO_WritePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin, 0);
-		}
-//		if(data[0][0] == sNum[0] ){
-//			HAL_GPIO_WritePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin, SET);
-//		}
-//		else if(data[1][0] == sNum[0]){
-//			HAL_GPIO_WritePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin, RESET);
-//		}
+		//lcd_clear_display();
 //	  if(timer_flag[0] == 1	){
 //		  HAL_GPIO_TogglePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin);
 //		  setTimer(0, 500);
 //	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -468,6 +461,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : BUTTON1_Pin BUTTON2_Pin */
+  GPIO_InitStruct.Pin = BUTTON1_Pin|BUTTON2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LED_DEBUG_Pin */

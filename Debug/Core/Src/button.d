@@ -1,5 +1,6 @@
-Core/Src/esp_uart.o: ../Core/Src/esp_uart.c ../Core/Inc/esp_uart.h \
- ../Core/Inc/main.h ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h \
+Core/Src/button.o: ../Core/Src/button.c ../Core/Inc/button.h \
+ ../Core/Inc/global.h ../Core/Inc/main.h \
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h \
  ../Core/Inc/stm32f0xx_hal_conf.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h \
@@ -29,9 +30,13 @@ Core/Src/esp_uart.o: ../Core/Src/esp_uart.c ../Core/Inc/esp_uart.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim_ex.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h \
- ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h
+ ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h \
+ ../Core/Inc/timer.h ../Core/Inc/button.h ../Core/Inc/RGB.h \
+ ../Core/Inc/i2c-lcd.h ../Core/Inc/RFID_SPI.h
 
-../Core/Inc/esp_uart.h:
+../Core/Inc/button.h:
+
+../Core/Inc/global.h:
 
 ../Core/Inc/main.h:
 
@@ -96,3 +101,13 @@ Core/Src/esp_uart.o: ../Core/Src/esp_uart.c ../Core/Inc/esp_uart.h \
 ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h:
 
 ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h:
+
+../Core/Inc/timer.h:
+
+../Core/Inc/button.h:
+
+../Core/Inc/RGB.h:
+
+../Core/Inc/i2c-lcd.h:
+
+../Core/Inc/RFID_SPI.h:
