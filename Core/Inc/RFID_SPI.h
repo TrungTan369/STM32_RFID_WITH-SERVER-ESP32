@@ -137,5 +137,6 @@ uchar MFRC522_Auth(uchar authMode, uchar BlockAddr, uchar *Sectorkey, uchar *ser
 uchar MFRC522_Read(uchar blockAddr, uchar *recvData);
 void MFRC522_Halt(void);
 
+void MFRC522_Reset(void);
 
 #endif /* INC_RFID_SPI_H_ */

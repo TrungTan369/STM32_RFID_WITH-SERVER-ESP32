@@ -61,19 +61,19 @@ void lcd_send_string (char *str)
 void lcd_clear_display (void)
 {
 	lcd_send_cmd (0x01); //clear display
-	HAL_Delay(5);
+	HAL_Delay(20);
 }
 
-void lcd_goto_XY (int row, int col)
-{
-	uint8_t pos_Addr;
-	if(row == 1){
-		pos_Addr = 0x80 + row - 1 + col;
-	}
-	else
-		pos_Addr = 0x80 | (0x40 + col);
-	lcd_send_cmd(pos_Addr);
+void lcd_goto_XY (int row, int col) {
+    uint8_t pos_Addr;
+    if(row == 1) {
+        pos_Addr = 0x80 + col; // Địa chỉ cho dòng đầu tiên
+    } else {
+        pos_Addr = 0xC0 + col; // Địa chỉ cho dòng thứ hai
+    }
+    lcd_send_cmd(pos_Addr);
 }
+
 void lcd_send_int(int number) {
     char str[16];
     sprintf(str, "%d", number);

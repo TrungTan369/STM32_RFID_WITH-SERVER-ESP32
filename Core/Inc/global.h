@@ -20,11 +20,11 @@
 
 extern UART_HandleTypeDef huart1;
 extern const uint8_t master[4];
-extern uint8_t *data[4];
-
-extern int status;
-
-uint8_t Check_master(const uint8_t* , uint8_t* );
+extern uint8_t ** data;
 
 
+uint8_t check_Card(uint8_t * );
+void delete_Card(uint8_t *);
+int8_t search_Card(uint8_t *);
+void add_Card(uint8_t *);
 #endif /* INC_GLOBAL_H_ */

@@ -11,7 +11,7 @@
 int blue = 0;
 int green = 0;
 int red = 0;
-int status=1;
+int status_led =1;
 int increasing = 1;
 int decreasing = 0;
 
@@ -34,7 +34,7 @@ void all_led(){
 			  red--;
 		  }
 		  if(red<0) {
-			  status++;
+			  status_led++;
 			  red=0;
 			  increasing++;
 			  decreasing--;
@@ -52,7 +52,7 @@ void all_led(){
 			  green--;
 		  }
 		  if(green<0) {
-			  status++;
+			  status_led++;
 			  green=0;
 			  increasing++;
 			  decreasing--;
@@ -70,7 +70,7 @@ void all_led(){
 			  blue--;
 		  }
 		  if(blue<0) {
-			  status++;
+			  status_led++;
 			  blue=0;
 			  increasing++;
 			  decreasing--;
@@ -92,7 +92,7 @@ void all_led(){
 
 		  }
 		  if(red<0) {
-			  status++;
+			  status_led++;
 			  green=0;
 			  red=0;
 			  increasing++;
@@ -113,7 +113,7 @@ void all_led(){
 			  blue=red*1.25;
 		  }
 		  if(blue<0) {
-			  status++;
+			  status_led++;
 			  blue=0;
 			  red=0;
 			  increasing++;
@@ -136,7 +136,7 @@ void all_led(){
 			  green=red*1.5;
 		  }
 		  if(blue<0) {
-			  status=1;
+			  status_led = 1;
 			  blue=0;
 			  red=0;
 			  green=0;

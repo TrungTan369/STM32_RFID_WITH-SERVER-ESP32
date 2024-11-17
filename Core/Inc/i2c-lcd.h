@@ -8,7 +8,7 @@
 #ifndef INC_I2C_LCD_H_
 #define INC_I2C_LCD_H_
 
-
+#include <stdio.h>
 #include "stm32f0xx_hal.h"
 
 extern I2C_HandleTypeDef hi2c1;  // change your handler here accordingly

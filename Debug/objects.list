@@ -1,7 +1,7 @@
 "./Core/Src/RFID_SPI.o"
 "./Core/Src/RGB.o"
 "./Core/Src/button.o"
-"./Core/Src/fsm_normal.o"
+"./Core/Src/fsm.o"
 "./Core/Src/global.o"
 "./Core/Src/i2c-lcd.o"
 "./Core/Src/main.o"

@@ -1,4 +1,4 @@
-global.c:15:9:Check_master	16	static
-global.c:22:6:readCard	8	static
-global.c:25:6:addCard	24	static
-global.c:33:9:delCard	16	static
+global.c:16:9:check_Card	16	static
+global.c:26:6:add_Card	24	static
+global.c:36:8:search_Card	24	static
+global.c:44:6:delete_Card	24	static

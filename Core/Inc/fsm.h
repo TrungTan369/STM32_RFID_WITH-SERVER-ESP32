@@ -10,6 +10,14 @@
 
 #include "global.h"
 
-void fsm_master();
+#define INIT 0
+#define WAITCARD 1
+#define MASTER_INIT 2
+#define MASTER_ADDCARD 3
+#define MASTER_DELCARD 4
+
+extern int status;
+
+void fsm(uint8_t *, uint8_t);
 
 #endif /* INC_FSM_MASTER_C_ */
