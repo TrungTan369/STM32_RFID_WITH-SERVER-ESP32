@@ -117,10 +117,10 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  setTimer(1, 50);
   lcd_init();
   MFRC522_Init();
   HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
+
    while (1)
    {
 		status_read = MFRC522_Request(PICC_REQIDL, str);
@@ -128,45 +128,13 @@ int main(void)
 		memcpy(readCard, str, 4);
 
 		if(status_read == MI_OK){
-			HAL_Delay(100);
+			setTimer(1, 60);// buzz
+			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 1);
 		}
-
+		if(timer_flag[1] == 1){
+			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
+		}
 		fsm(readCard, status_read);
-
-//		if(timer_flag[0] == 1){
-//			lcd_send_string("HELLO MASTER");
-//			setTimer(0, 7000);
-//		}
-
-//		if(timer_flag[1] != 1){
-//			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 1);
-//		}
-//		else{
-//			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
-//		}
-
-//		lcd_goto_XY(1, 0);
-//		lcd_send_int(readCard[0]);
-//		lcd_goto_XY(1, 4);
-//		lcd_send_int(readCard[1]);
-//		lcd_goto_XY(1, 8);
-//		lcd_send_int(readCard[2]);
-//		lcd_goto_XY(1, 12);
-//		lcd_send_int(readCard[3]);
-//
-//		lcd_goto_XY(0, 0);
-//		lcd_send_string("I LOVE YOU");
-
-
-//		if( (readCard[0] == 243) && (readCard[1] == 25) && (readCard[2] == 142) && (readCard[3] == 19)){
-//			HAL_GPIO_TogglePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin);
-//			HAL_Delay(100);
-//		}
-		//lcd_clear_display();
-//	  if(timer_flag[0] == 1	){
-//		  HAL_GPIO_TogglePin(LED_DEBUG_GPIO_Port, LED_DEBUG_Pin);
-//		  setTimer(0, 500);
-//	  }
 
     /* USER CODE END WHILE */
 

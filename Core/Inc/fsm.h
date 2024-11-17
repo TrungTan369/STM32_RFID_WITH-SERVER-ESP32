@@ -17,6 +17,7 @@
 #define MASTER_DELCARD 4
 
 extern int status;
+extern uint8_t * data_uart;
 
 void fsm(uint8_t *, uint8_t);
 

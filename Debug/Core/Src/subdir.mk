@@ -17,7 +17,8 @@ C_SRCS += \
 ../Core/Src/syscalls.c \
 ../Core/Src/sysmem.c \
 ../Core/Src/system_stm32f0xx.c \
-../Core/Src/timer.c 
+../Core/Src/timer.c \
+../Core/Src/uart_ESP.c 
 
 OBJS += \
 ./Core/Src/RFID_SPI.o \
@@ -32,7 +33,8 @@ OBJS += \
 ./Core/Src/syscalls.o \
 ./Core/Src/sysmem.o \
 ./Core/Src/system_stm32f0xx.o \
-./Core/Src/timer.o 
+./Core/Src/timer.o \
+./Core/Src/uart_ESP.o 
 
 C_DEPS += \
 ./Core/Src/RFID_SPI.d \
@@ -47,7 +49,8 @@ C_DEPS += \
 ./Core/Src/syscalls.d \
 ./Core/Src/sysmem.d \
 ./Core/Src/system_stm32f0xx.d \
-./Core/Src/timer.d 
+./Core/Src/timer.d \
+./Core/Src/uart_ESP.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

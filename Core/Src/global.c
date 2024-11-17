@@ -41,12 +41,13 @@ int8_t search_Card(uint8_t *readCard){
 	}
 	return -1; // can't searched
 }
-void delete_Card(uint8_t * readCard){
-	if(numCard <= 0)
-		return;
+uint8_t num_Card(){
+	return numCard;
+}
+uint8_t delete_Card(uint8_t * readCard){
 	int index = search_Card(readCard);
 	if(index == -1){
-		return;
+		return 0;
 	}
 	free(data[index]);
 	for (int i = index; i < numCard - 1; i++) {
@@ -54,5 +55,5 @@ void delete_Card(uint8_t * readCard){
 	}
 	data = (uint8_t **)realloc(data, numCard * sizeof(uint8_t *));
 	numCard--;
-
+	return 1;
 }

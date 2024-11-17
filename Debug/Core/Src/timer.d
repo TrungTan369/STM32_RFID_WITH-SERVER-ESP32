@@ -32,7 +32,7 @@ Core/Src/timer.o: ../Core/Src/timer.c ../Core/Inc/timer.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h \
  ../Core/Inc/timer.h ../Core/Inc/button.h ../Core/Inc/RGB.h \
- ../Core/Inc/i2c-lcd.h ../Core/Inc/RFID_SPI.h
+ ../Core/Inc/i2c-lcd.h ../Core/Inc/RFID_SPI.h ../Core/Inc/uart_ESP.h
 
 ../Core/Inc/timer.h:
 
@@ -111,3 +111,5 @@ Core/Src/timer.o: ../Core/Src/timer.c ../Core/Inc/timer.h \
 ../Core/Inc/i2c-lcd.h:
 
 ../Core/Inc/RFID_SPI.h:
+
+../Core/Inc/uart_ESP.h:
