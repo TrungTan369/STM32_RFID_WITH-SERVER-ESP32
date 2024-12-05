@@ -11,17 +11,20 @@
 #include "main.h"
 #include <stdlib.h>
 #include "string.h"
-#include "timer.h"
 #include "button.h"
 #include "RGB.h"
 #include "i2c-lcd.h"
 #include "RFID_SPI.h"
 #include "uart_ESP.h"
+#include "scheduler.h"
+#include "fsm.h"
 
 extern UART_HandleTypeDef huart1;
 extern const uint8_t master[4];
 extern uint8_t ** data;
-
+extern uint8_t numCard;
+extern uint8_t status_read;
+extern uint8_t readCard[4];
 
 uint8_t check_Card(uint8_t * );
 uint8_t delete_Card(uint8_t *);

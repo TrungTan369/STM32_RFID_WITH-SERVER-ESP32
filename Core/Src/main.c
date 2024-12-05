@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "fsm.h"
+#include "global.h"
 
 /* USER CODE END Includes */
 
@@ -58,20 +58,24 @@ UART_HandleTypeDef huart1;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_TIM3_Init(void);
 static void MX_DMA_Init(void);
+static void MX_TIM3_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
-
+void buzz_off();
+void READ_CARD();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint8_t status_read;
-uint8_t str[MAX_LEN]; // Max_LEN = 16
 uint8_t readCard[4];
+uint8_t str[MAX_LEN]; // Max_LEN = 16
+uint8_t cardProcessed = 0; // 0: chưa xử lý, 1: đã xử lý
+uint8_t previousCard[4] = {0}; // Lưu ID thẻ trước đó
+
 /* USER CODE END 0 */
 
 /**
@@ -80,6 +84,7 @@ uint8_t readCard[4];
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -102,8 +107,8 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_TIM3_Init();
   MX_DMA_Init();
+  MX_TIM3_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   MX_I2C1_Init();
@@ -120,22 +125,12 @@ int main(void)
   lcd_init();
   MFRC522_Init();
   HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
-
+  SCH_Add_Task(getKeyinput, 100, 10);
+  SCH_Add_Task(fsm, 100, 10);
+  SCH_Add_Task(READ_CARD, 100, 10);
    while (1)
    {
-		status_read = MFRC522_Request(PICC_REQIDL, str);
-		status_read = MFRC522_Anticoll(str);
-		memcpy(readCard, str, 4);
-
-		if(status_read == MI_OK){
-			setTimer(1, 60);// buzz
-			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 1);
-		}
-		if(timer_flag[1] == 1){
-			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
-		}
-		fsm(readCard, status_read);
-
+		SCH_Dispatch_Task();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -164,6 +159,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -213,12 +209,14 @@ static void MX_I2C1_Init(void)
   {
     Error_Handler();
   }
+
   /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
+
   /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
@@ -397,6 +395,8 @@ static void MX_DMA_Init(void)
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOF_CLK_ENABLE();
@@ -439,10 +439,35 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_DEBUG_GPIO_Port, &GPIO_InitStruct);
 
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
+	SCH_Update();
+}
+void buzz_off(){
+	HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
+}
+void READ_CARD() {
+    status_read = MFRC522_Request(PICC_REQIDL, str);
+    if (status_read == MI_OK) {
+        status_read = MFRC522_Anticoll(str);
+        if (status_read == MI_OK) {
+            if (memcmp(previousCard, str, 4) != 0 || cardProcessed == 0) {
+            	memcpy(readCard, str, 4);
+                memcpy(previousCard, str, 4);
+                cardProcessed = 1;
+                HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 1);
+                SCH_Add_Task(buzz_off, 50, 0);
+            }
+        }
+    } else {
+        cardProcessed = 0;
+        memset(previousCard, 0, 4);
+    }
+}
 /* USER CODE END 4 */
 
 /**
@@ -476,5 +501,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

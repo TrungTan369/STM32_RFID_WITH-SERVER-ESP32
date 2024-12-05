@@ -20,6 +20,15 @@ void rgb(int red, int green, int blue){
 	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 110 - green);
 	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 120 - red);
 }
+void RGB_RED(){
+	rgb(100, 0, 0); // RED
+}
+void RGB_PURPLE(){
+	rgb(100, 0, 100);
+}
+void RGB_GREEN(){
+	rgb(0, 100, 0);
+}
 void all_led(){
 	switch(status_led){
 	  case RED:

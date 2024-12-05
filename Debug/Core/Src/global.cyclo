@@ -1,0 +1,5 @@
+../Core/Src/global.c:14:9:check_Card	6
+../Core/Src/global.c:24:6:add_Card	1
+../Core/Src/global.c:34:8:search_Card	6
+../Core/Src/global.c:42:9:num_Card	1
+../Core/Src/global.c:45:9:delete_Card	3

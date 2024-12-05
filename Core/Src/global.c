@@ -11,8 +11,6 @@ const uint8_t master[4] = {243, 25, 142, 19};
 uint8_t ** data = NULL;
 uint8_t numCard = 0;
 
-
-
 uint8_t check_Card(uint8_t * readCard){
 	if(readCard[0] == master[0] && readCard[1] == master[1] && readCard[2] == master[2] && readCard[3] == master[3]){
 		return 2; // MASTERCARD

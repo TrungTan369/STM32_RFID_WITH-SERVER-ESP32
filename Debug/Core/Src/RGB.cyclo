@@ -1,0 +1,5 @@
+../Core/Src/RGB.c:18:6:rgb	1
+../Core/Src/RGB.c:23:6:RGB_RED	1
+../Core/Src/RGB.c:26:6:RGB_PURPLE	1
+../Core/Src/RGB.c:29:6:RGB_GREEN	1
+../Core/Src/RGB.c:32:6:all_led	32

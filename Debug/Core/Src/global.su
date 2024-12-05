@@ -1,5 +1,5 @@
-global.c:16:9:check_Card	16	static
-global.c:26:6:add_Card	24	static
-global.c:36:8:search_Card	24	static
-global.c:44:9:num_Card	8	static
-global.c:47:9:delete_Card	24	static
+../Core/Src/global.c:14:9:check_Card	16	static
+../Core/Src/global.c:24:6:add_Card	24	static
+../Core/Src/global.c:34:8:search_Card	24	static
+../Core/Src/global.c:42:9:num_Card	8	static
+../Core/Src/global.c:45:9:delete_Card	24	static

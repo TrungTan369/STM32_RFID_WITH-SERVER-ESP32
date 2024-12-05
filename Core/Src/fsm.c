@@ -8,9 +8,8 @@
 #include "fsm.h"
 
 int status = INIT;
-uint8_t * data_uart ;
-void fsm(uint8_t * readCard, uint8_t status_read){
-	switch (status) {
+void fsm(){
+	switch (status){
 		case INIT:
 			lcd_clear_display();
 			lcd_goto_XY(1, 0);
@@ -19,36 +18,56 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 			lcd_send_string("TO CONTROL LED");
 			status = WAITCARD;
 		case WAITCARD:
-			if(status_read != MI_OK){
-				break;
+			if( status_read == MI_OK && cardProcessed == 0 ){
+				// ---------MASTER CARD ----------------
+				if(check_Card(readCard) == 2){
+					sendDataToESP32("MASTER LOGGIN\r\n");
+					RGB_PURPLE();
+					SCH_Add_Task(RGB_RED, 3000, 0);
+					//state_MASTER_INIT();
+					lcd_clear_display();
+					lcd_goto_XY(1, 0);
+					lcd_send_string("1. ADD - DELETE");
+					lcd_goto_XY(0, 0);
+					lcd_send_string("2. OTHER");
+					status = MASTER_MENU_1;
+				}
+				// ------ NORMAL CARD ------------
+				else if( check_Card(readCard) == 1){
+					sendDataToESP32("TURN LED\r\n");
+					RGB_GREEN();
+					SCH_Add_Task(RGB_RED, 3000, 0);
+				}
+				else {//if (check_Card(readCard) == 0)
+					//state_CARD_NOT_EXSIT();
+					lcd_clear_display();
+					lcd_goto_XY(1, 0);
+					lcd_send_string("CARD NOT EXIST");
+					lcd_goto_XY(0, 0);
+					lcd_send_string("TRY AGAIN");
+					SCH_Add_Task(state_INIT, 1000, 0);
+				}
 			}
-			if(check_Card(readCard) == 2){ // MASTER CARD
-				sendDataToESP32("MASTER LOGGIN\r\n");
-				setTimer(0, 3000);
-				rgb(60, 60, 60); // PINK
-				status = MASTER_INIT;
+			break;
+		case MASTER_MENU_1:
+			if(isButtonPress(0) == 1){
 				lcd_clear_display();
 				lcd_goto_XY(1, 0);
 				lcd_send_string("1. ADD CARD");
 				lcd_goto_XY(0, 0);
 				lcd_send_string("2. DELETE CARD");
-				break;
+				status = MASTER_MENU_2;
 			}
-			if( check_Card(readCard) == 1){ // NORMAL CARD
-				sendDataToESP32("TURN LED\r\n");
-				setTimer(0, 3000);
-				rgb(0, 100, 0);
-				break;
-			}
-			if (check_Card(readCard) == 0) {
+			if(isButtonPress(1) == 1){
 				lcd_clear_display();
 				lcd_goto_XY(1, 0);
-				lcd_send_string("CARD NOT EXIST");
-				HAL_Delay(1000);
-				status = INIT;
+				lcd_send_string("1. NUMBER OF CARDS");
+				lcd_goto_XY(0, 0);
+				lcd_send_string("2. EXIT");
+				status = MASTER_MENU_3;
 			}
 			break;
-		case MASTER_INIT:
+		case MASTER_MENU_2:
 			if(isButtonPress(0) == 1){
 				lcd_clear_display();
 				lcd_goto_XY(1, 0);
@@ -62,6 +81,18 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 				status = MASTER_DELCARD;
 			}
 			break;
+		case MASTER_MENU_3:
+			if(isButtonPress(0) == 1){
+				lcd_clear_display();
+				lcd_goto_XY(1, 0);
+				lcd_send_string("NUMBER OF CARDS");
+				lcd_send_int(numCard);
+				SCH_Add_Task(state_INIT, 1000, 0);
+			}
+			if(isButtonPress(1) == 1){
+				status = INIT;
+			}
+			break;
 		case MASTER_ADDCARD:
 			if(status_read == MI_OK){
 				if(check_Card(readCard) == 1){
@@ -73,19 +104,15 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 					lcd_goto_XY(0, 0);
 					lcd_send_string("ADDED CARD");
 					sendDataToESP32("ADDED CARD\r\n");
-					setTimer(3, 2000);
 				}
-				HAL_Delay(1000);
-				status = INIT;
+				SCH_Add_Task(state_INIT, 1000, 0);
 			}
 			break;
 		case MASTER_DELCARD:
 			if(num_Card() == 0){
 				lcd_goto_XY(0, 0);
 				lcd_send_string(" LIST CARD EMPTY");
-				HAL_Delay(1000);
-				status = INIT;
-				break;
+				SCH_Add_Task(state_INIT, 1000, 0);
 			}
 			if(status_read == MI_OK){
 				if( delete_Card(readCard) == 0){
@@ -97,16 +124,48 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 					lcd_send_string("DELETED CARD");
 					sendDataToESP32("DELETED CARD\r\n");
 				}
-				HAL_Delay(1000);
-				status = INIT;
-				break;
+				SCH_Add_Task(state_INIT, 1000, 0);
 			}
 			break;
 		default:
 			break;
 	}
+}
 
-	if(timer_flag[0] == 1){ // sang trong 3 s
-		rgb(100, 0, 0); // RED
-	}
+void state_INIT(){
+	status = INIT;
+}
+void state_WAITCARD(){
+	status = WAITCARD;
+	lcd_clear_display();
+	lcd_goto_XY(1, 0);
+	lcd_send_string("PUT ON YOUR CARD");
+	lcd_goto_XY(0, 0);
+	lcd_send_string("TO CONTROL LED");
+}
+void state_MASTER_INIT(){
+	status = MASTER_MENU_1;
+	lcd_clear_display();
+	lcd_goto_XY(1, 0);
+	lcd_send_string("1. ADD CARD");
+	lcd_goto_XY(0, 0);
+	lcd_send_string("2. DELETE CARD");
+}
+void state_MASTER_ADDCARD();
+void state_MASTER_DELCARD();
+void state_CARD_NOT_EXSIT(){
+	status = CARD_NOT_EXSIT;
+	lcd_clear_display();
+	lcd_goto_XY(1, 0);
+	lcd_send_string("CARD NOT EXIST");
+	lcd_goto_XY(0, 0);
+	lcd_send_string("TRY AGAIN");
+}
+void state_CARD_EXSITED(){
+	status = CARD_EXISTED;
+	lcd_clear_display();
+	lcd_goto_XY(1, 0);
+	lcd_send_string("CARD_EXISTED");
+	lcd_goto_XY(0, 0);
+	lcd_send_string("TRY AGAIN");
 }

@@ -15,8 +15,9 @@
 #define YELLOW 4
 #define PURPLE 5
 #define WHITE 6
-TIM_HandleTypeDef htim3;
-DMA_HandleTypeDef hdma_tim3_ch4_up;
+
+extern TIM_HandleTypeDef htim3;
+extern DMA_HandleTypeDef hdma_tim3_ch4_up;
 
 extern int blue;
 extern int green;
@@ -26,5 +27,8 @@ extern int increasing;
 extern int decreasing;
 
 void rgb(int, int, int);
+void RGB_RED();
+void RGB_GREEN();
+void RGB_PURPLE();
 void all_led();
 #endif /* INC_RGB_H_ */
