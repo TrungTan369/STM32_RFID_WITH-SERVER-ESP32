@@ -1,6 +1,1 @@
-../Core/Src/fsm.c:11:6:fsm	23
-../Core/Src/fsm.c:135:6:state_INIT	1
-../Core/Src/fsm.c:138:6:state_WAITCARD	1
-../Core/Src/fsm.c:146:6:state_MASTER_INIT	1
-../Core/Src/fsm.c:156:6:state_CARD_NOT_EXSIT	1
-../Core/Src/fsm.c:164:6:state_CARD_EXSITED	1
+../Core/Src/fsm.c:12:6:fsm	18

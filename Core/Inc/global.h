@@ -16,7 +16,7 @@
 #include "i2c-lcd.h"
 #include "RFID_SPI.h"
 #include "uart_ESP.h"
-#include "scheduler.h"
+#include "timer.h"
 #include "fsm.h"
 
 extern UART_HandleTypeDef huart1;
