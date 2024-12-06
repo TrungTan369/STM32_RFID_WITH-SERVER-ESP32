@@ -9,6 +9,8 @@
 
 int status = INIT;
 uint8_t * data_uart ;
+
+
 void fsm(uint8_t * readCard, uint8_t status_read){
 	switch (status) {
 		case INIT:
@@ -19,11 +21,11 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 			lcd_send_string("TO CONTROL LED");
 			status = WAITCARD;
 		case WAITCARD:
-			if( status_read == MI_OK && cardProcessed == 0 ){
+			if( status_read == MI_OK){
 				if(check_Card(readCard) == 2){ // MASTER CARD
 					sendDataToESP32("MASTER LOGGIN\r\n");
-					setTimer(0, 3000);
 					rgb(60, 60, 60); // PINK
+					SCH_Add_Task(RESET_RFID, 3000, 0);
 					lcd_clear_display();
 					lcd_goto_XY(1, 0);
 					lcd_send_string("1. ADD - DELETE");
@@ -34,16 +36,15 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 				}
 				if( check_Card(readCard) == 1){ // NORMAL CARD
 					sendDataToESP32("TURN LED\r\n");
-					setTimer(0, 3000);
-					rgb(0, 100, 0);
+					rgb(0, 100, 0); //GREEN
+					SCH_Add_Task(RESET_RFID, 3000, 0);
 					break;
 				}
 				if (check_Card(readCard) == 0) {
 					lcd_clear_display();
 					lcd_goto_XY(1, 0);
 					lcd_send_string("CARD NOT EXIST");
-					HAL_Delay(1000);
-					status = INIT;
+					SCH_Add_Task(STATUS_INIT, 2000, 0);
 				}
 			}
 			break;
@@ -86,11 +87,10 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 					lcd_send_string("NUMBER OF CARDS");
 					lcd_goto_XY(0, 0);
 					lcd_send_int(numCard);
-					HAL_Delay(1000);
-					status = INIT;
+					SCH_Add_Task(STATUS_INIT, 2000, 0);
 				}
 				if(isButtonPress(1) == 1){
-					status = INIT;
+					STATUS_INIT();
 				}
 				break;
 		case MASTER_ADDCARD:
@@ -104,18 +104,16 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 					lcd_goto_XY(0, 0);
 					lcd_send_string("ADDED CARD");
 					sendDataToESP32("ADDED CARD\r\n");
-					setTimer(3, 2000);
+					status = STATUS_DELAY;
 				}
-				HAL_Delay(1000);
-				status = INIT;
+				SCH_Add_Task(STATUS_INIT, 2000, 0);
 			}
 			break;
 		case MASTER_DELCARD:
 			if(num_Card() == 0){
 				lcd_goto_XY(0, 0);
 				lcd_send_string(" LIST CARD EMPTY");
-				HAL_Delay(1000);
-				status = INIT;
+				SCH_Add_Task(STATUS_INIT, 2000, 0);
 				break;
 			}
 			if(status_read == MI_OK){
@@ -127,17 +125,28 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 					lcd_goto_XY(0, 0);
 					lcd_send_string("DELETED CARD");
 					sendDataToESP32("DELETED CARD\r\n");
+					status = STATUS_DELAY;
 				}
-				HAL_Delay(1000);
-				status = INIT;
+				SCH_Add_Task(STATUS_INIT, 2000, 0);
 				break;
 			}
+			break;
+		case STATUS_DELAY:
 			break;
 		default:
 			break;
 	}
 
-	if(timer_flag[0] == 1){ // sang trong 3 s
-		rgb(100, 0, 0); // RED
-	}
+//	if(timer_flag[0] == 1){ // sang trong 3 s
+//		rgb(100, 0, 0); // RED
+//		memset(previousCard, 0, sizeof(previousCard));
+//	}
+}
+void STATUS_INIT(){
+	status = INIT;
+	memset(previousCard, 0, sizeof(previousCard));
+}
+void RESET_RFID(){
+	rgb(100, 0, 0); // RED
+	memset(previousCard, 0, sizeof(previousCard));
 }

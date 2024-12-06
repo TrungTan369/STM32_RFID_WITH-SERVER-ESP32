@@ -17,10 +17,11 @@
 #define MASTER_MENU_3 4
 #define MASTER_ADDCARD 5
 #define MASTER_DELCARD 6
-
+#define STATUS_DELAY 7
 extern int status;
 extern uint8_t * data_uart;
 
 void fsm(uint8_t *, uint8_t);
-
+void RESET_RFID();
+void STATUS_INIT();
 #endif /* INC_FSM_MASTER_C_ */

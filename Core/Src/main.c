@@ -64,7 +64,8 @@ static void MX_SPI1_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
-void READ_CARD();
+void led_debug();
+void buzz_off();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -122,7 +123,7 @@ int main(void)
   lcd_init();
   MFRC522_Init();
   HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
-
+  SCH_Add_Task(led_debug, 100, 1000);
    while (1)
    {
 		status_read = MFRC522_Request(PICC_REQIDL, str);
@@ -130,14 +131,14 @@ int main(void)
 		memcpy(readCard, str, 4);
 
 		if(status_read == MI_OK){
-			setTimer(1, 60);// buzz
-			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 1);
-		}
-		if(timer_flag[1] == 1){
-			HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
+			if(memcmp(readCard, previousCard, 4) != 0){
+				  HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 1);
+				SCH_Add_Task(buzz_off, 50, 0);
+				 memcpy(previousCard, readCard, 4);
+			}
 		}
 		fsm(readCard, status_read);
-
+		SCH_Dispatch_Task();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -444,23 +445,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void READ_CARD() {
-    status_read = MFRC522_Request(PICC_REQIDL, str);
-    if (status_read == MI_OK) {
-        status_read = MFRC522_Anticoll(str);
-        if (status_read == MI_OK) {
-            if (memcmp(previousCard, str, 4) != 0 || cardProcessed == 0) {
-            	memcpy(readCard, str, 4);
-                memcpy(previousCard, str, 4);
-                cardProcessed = 1;
-                HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 1);
-                //SCH_Add_Task(buzz_off, 50, 0);
-            }
-        }
-    } else {
-        cardProcessed = 0;
-        memset(previousCard, 0, 4);
-    }
+void led_debug(){
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
+}
+void buzz_off(){
+	HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
 }
 /* USER CODE END 4 */
 

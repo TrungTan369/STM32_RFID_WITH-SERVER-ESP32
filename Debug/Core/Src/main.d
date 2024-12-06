@@ -33,7 +33,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/fsm.h ../Core/Inc/global.h ../Core/Inc/main.h \
  ../Core/Inc/button.h ../Core/Inc/RGB.h ../Core/Inc/i2c-lcd.h \
  ../Core/Inc/RFID_SPI.h ../Core/Inc/uart_ESP.h ../Core/Inc/timer.h \
- ../Core/Inc/fsm.h
+ ../Core/Inc/fsm.h ../Core/Inc/scheduler.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h:
 ../Core/Inc/stm32f0xx_hal_conf.h:
@@ -76,3 +76,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/uart_ESP.h:
 ../Core/Inc/timer.h:
 ../Core/Inc/fsm.h:
+../Core/Inc/scheduler.h:

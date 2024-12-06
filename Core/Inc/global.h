@@ -18,7 +18,7 @@
 #include "uart_ESP.h"
 #include "timer.h"
 #include "fsm.h"
-
+#include "scheduler.h"
 extern UART_HandleTypeDef huart1;
 extern const uint8_t master[4];
 extern uint8_t ** data;
