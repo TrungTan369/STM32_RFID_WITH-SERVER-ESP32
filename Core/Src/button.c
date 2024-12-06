@@ -13,12 +13,12 @@ void getKeyinput(){
 	//-----PROCESS BUTTON 1------------
 	if((count == 0) && (HAL_GPIO_ReadPin(BUTTON1_GPIO_Port, BUTTON1_Pin) == 0)){
 		buttonFlag[0] = 1;
-		count = 10;
+		count = 20;
 	}
 	// ----PROCESS BUTTON 2-----------
 	if((count == 0) && (HAL_GPIO_ReadPin(BUTTON2_GPIO_Port, BUTTON2_Pin) == 0)){
 		buttonFlag[1] = 1;
-		count = 10;
+		count = 20;
 	}
 }
 int isButtonPress(int i){

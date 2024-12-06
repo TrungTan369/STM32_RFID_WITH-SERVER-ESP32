@@ -12,9 +12,11 @@
 
 #define INIT 0
 #define WAITCARD 1
-#define MASTER_INIT 2
-#define MASTER_ADDCARD 3
-#define MASTER_DELCARD 4
+#define MASTER_MENU_1 2
+#define MASTER_MENU_2 3
+#define MASTER_MENU_3 4
+#define MASTER_ADDCARD 5
+#define MASTER_DELCARD 6
 
 extern int status;
 extern uint8_t * data_uart;

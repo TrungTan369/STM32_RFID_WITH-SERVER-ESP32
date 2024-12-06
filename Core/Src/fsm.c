@@ -24,12 +24,12 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 					sendDataToESP32("MASTER LOGGIN\r\n");
 					setTimer(0, 3000);
 					rgb(60, 60, 60); // PINK
-					status = MASTER_INIT;
 					lcd_clear_display();
 					lcd_goto_XY(1, 0);
-					lcd_send_string("1. ADD CARD");
+					lcd_send_string("1. ADD - DELETE");
 					lcd_goto_XY(0, 0);
-					lcd_send_string("2. DELETE CARD");
+					lcd_send_string("2. OTHER");
+					status = MASTER_MENU_1;
 					break;
 				}
 				if( check_Card(readCard) == 1){ // NORMAL CARD
@@ -47,20 +47,52 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 				}
 			}
 			break;
-		case MASTER_INIT:
-			if(isButtonPress(0) == 1){
-				lcd_clear_display();
-				lcd_goto_XY(1, 0);
-				lcd_send_string("SET CLOSER CARD");
-				status = MASTER_ADDCARD;
-			}
-			if(isButtonPress(1) == 1){
-				lcd_clear_display();
-				lcd_goto_XY(1, 0);
-				lcd_send_string("SET CLOSER CARD");
-				status = MASTER_DELCARD;
-			}
-			break;
+		case MASTER_MENU_1:
+				if(isButtonPress(0) == 1){
+					lcd_clear_display();
+					lcd_goto_XY(1, 0);
+					lcd_send_string("1. ADD CARD");
+					lcd_goto_XY(0, 0);
+					lcd_send_string("2. DELETE CARD");
+					status = MASTER_MENU_2;
+				}
+				if(isButtonPress(1) == 1){
+					lcd_clear_display();
+					lcd_goto_XY(1, 0);
+					lcd_send_string("1. CARD COUNT");
+					lcd_goto_XY(0, 0);
+					lcd_send_string("2. EXIT");
+					status = MASTER_MENU_3;
+				}
+				break;
+		case MASTER_MENU_2:
+				if(isButtonPress(0) == 1){
+					lcd_clear_display();
+					lcd_goto_XY(1, 0);
+					lcd_send_string("SET CLOSER CARD");
+					status = MASTER_ADDCARD;
+				}
+				if(isButtonPress(1) == 1){
+					lcd_clear_display();
+					lcd_goto_XY(1, 0);
+					lcd_send_string("SET CLOSER CARD");
+					status = MASTER_DELCARD;
+				}
+				break;
+			case MASTER_MENU_3:
+				if(isButtonPress(0) == 1){
+					lcd_clear_display();
+					lcd_goto_XY(1, 0);
+					lcd_send_string("NUMBER OF CARDS");
+					lcd_goto_XY(0, 0);
+					lcd_send_int(numCard);
+					HAL_Delay(1000);
+					status = INIT;
+				}
+				if(isButtonPress(1) == 1){
+					status = INIT;
+				}
+				break;
 		case MASTER_ADDCARD:
 			if(status_read == MI_OK){
 				if(check_Card(readCard) == 1){
