@@ -64,7 +64,7 @@ static void MX_SPI1_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
-
+void READ_CARD();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -72,6 +72,8 @@ static void MX_I2C1_Init(void);
 uint8_t status_read;
 uint8_t str[MAX_LEN]; // Max_LEN = 16
 uint8_t readCard[4];
+uint8_t previousCard[4];
+uint8_t cardProcessed;
 /* USER CODE END 0 */
 
 /**
@@ -442,7 +444,24 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void READ_CARD() {
+    status_read = MFRC522_Request(PICC_REQIDL, str);
+    if (status_read == MI_OK) {
+        status_read = MFRC522_Anticoll(str);
+        if (status_read == MI_OK) {
+            if (memcmp(previousCard, str, 4) != 0 || cardProcessed == 0) {
+            	memcpy(readCard, str, 4);
+                memcpy(previousCard, str, 4);
+                cardProcessed = 1;
+                HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 1);
+                //SCH_Add_Task(buzz_off, 50, 0);
+            }
+        }
+    } else {
+        cardProcessed = 0;
+        memset(previousCard, 0, 4);
+    }
+}
 /* USER CODE END 4 */
 
 /**

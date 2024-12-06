@@ -19,33 +19,32 @@ void fsm(uint8_t * readCard, uint8_t status_read){
 			lcd_send_string("TO CONTROL LED");
 			status = WAITCARD;
 		case WAITCARD:
-			if(status_read != MI_OK){
-				break;
-			}
-			if(check_Card(readCard) == 2){ // MASTER CARD
-				sendDataToESP32("MASTER LOGGIN\r\n");
-				setTimer(0, 3000);
-				rgb(60, 60, 60); // PINK
-				status = MASTER_INIT;
-				lcd_clear_display();
-				lcd_goto_XY(1, 0);
-				lcd_send_string("1. ADD CARD");
-				lcd_goto_XY(0, 0);
-				lcd_send_string("2. DELETE CARD");
-				break;
-			}
-			if( check_Card(readCard) == 1){ // NORMAL CARD
-				sendDataToESP32("TURN LED\r\n");
-				setTimer(0, 3000);
-				rgb(0, 100, 0);
-				break;
-			}
-			if (check_Card(readCard) == 0) {
-				lcd_clear_display();
-				lcd_goto_XY(1, 0);
-				lcd_send_string("CARD NOT EXIST");
-				HAL_Delay(1000);
-				status = INIT;
+			if( status_read == MI_OK && cardProcessed == 0 ){
+				if(check_Card(readCard) == 2){ // MASTER CARD
+					sendDataToESP32("MASTER LOGGIN\r\n");
+					setTimer(0, 3000);
+					rgb(60, 60, 60); // PINK
+					status = MASTER_INIT;
+					lcd_clear_display();
+					lcd_goto_XY(1, 0);
+					lcd_send_string("1. ADD CARD");
+					lcd_goto_XY(0, 0);
+					lcd_send_string("2. DELETE CARD");
+					break;
+				}
+				if( check_Card(readCard) == 1){ // NORMAL CARD
+					sendDataToESP32("TURN LED\r\n");
+					setTimer(0, 3000);
+					rgb(0, 100, 0);
+					break;
+				}
+				if (check_Card(readCard) == 0) {
+					lcd_clear_display();
+					lcd_goto_XY(1, 0);
+					lcd_send_string("CARD NOT EXIST");
+					HAL_Delay(1000);
+					status = INIT;
+				}
 			}
 			break;
 		case MASTER_INIT:

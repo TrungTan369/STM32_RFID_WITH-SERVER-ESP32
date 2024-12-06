@@ -25,6 +25,8 @@ extern uint8_t ** data;
 extern uint8_t numCard;
 extern uint8_t status_read;
 extern uint8_t readCard[4];
+extern uint8_t cardProcessed;
+extern uint8_t previousCard[4];
 
 uint8_t check_Card(uint8_t * );
 uint8_t delete_Card(uint8_t *);
