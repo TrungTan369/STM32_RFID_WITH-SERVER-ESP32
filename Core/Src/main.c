@@ -124,6 +124,7 @@ int main(void)
   MFRC522_Init();
   HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
   SCH_Add_Task(led_debug, 100, 1000);
+  SCH_Add_Task(getKeyinput, 10, 20);
    while (1)
    {
 		status_read = MFRC522_Request(PICC_REQIDL, str);
@@ -450,6 +451,9 @@ void led_debug(){
 }
 void buzz_off(){
 	HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, 0);
+}
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
+	SCH_Update();
 }
 /* USER CODE END 4 */
 
